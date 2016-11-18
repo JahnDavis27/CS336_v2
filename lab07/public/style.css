@@ -1,0 +1,18 @@
+/*style.css
+ *Name: Jahn Davis
+ *Date: October 19th, 2016
+ *Course: CS336
+ */
+
+
+a.test {
+    font-weight: bold;
+}
+
+h2 {
+	color: blue;
+}
+
+p {
+	font-style: italic;
+}

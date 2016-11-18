@@ -1,0 +1,1 @@
+console.log("Do you wanna have a bad time?");

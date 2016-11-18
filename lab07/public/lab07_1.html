@@ -1,0 +1,58 @@
+<!--HTML for lab07_1
+Name: Jahn Davis
+Date: October 19th, 2016
+Course: CS336
+!-->
+
+<!doctype html>
+<html>
+	<head>
+	    <meta charset="utf-8">
+	    <title>lab07 jQuery</title>
+	    <script src="//code.jquery.com/jquery-latest.min.js"></script>
+
+	    <style>
+			a.test {
+	    		font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+	    <a href="http://jquery.com/">jQuery</a>
+	    <script src="jquery.js"></script>
+	    <script>
+	 		// Using the .ready() function inside the script body
+	$( document ).ready(function() {
+		// First click() event handler exercise
+		/*
+		$( "a" ).click(function( event ) {
+        alert( "Thanks for visiting!" );
+    	});
+    	*/
+
+
+		//Second click() event handler exercise
+ 		/*
+ 		$( "a" ).click(function( event ) {
+       	alert( "As you can see, the link no longer took you to jquery.com" );
+        	event.preventDefault();
+    	});
+    	*/
+
+    	// Third click() event handler exercise
+    	$( "a" ).click(function( event ) {
+    	event.preventDefault();
+    	$( this ).hide( "slow" );
+		});
+    	// Make the <a> elements bold
+    	$( "a" ).addClass( "test" );
+    	// Creating a new DOM element and adding it to the document
+    	var newPrgrh= $("<p>", {
+    		html: "This is a <strong> test </strong> paragraph.",
+    		"class": "new",
+    	});
+    	newPrgrh.appendTo("body");
+		});
+	    </script>
+	</body>
+</html>

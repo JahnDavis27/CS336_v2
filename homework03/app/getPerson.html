@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Homework 03</title>
+    <!-- jQuery code -->
+    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+    <script src="getPersonScript.js"></script>
+    <!-- jQuery UI code -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <!-- Form to get person ID -->
+    <!-- Adapted from Professor Vander Linden's HTML form example -->
+    <!-- https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Forms/My_first_HTML_form -->
+    <form action="/person" method="get">
+      <div>
+        <label for="id">Person's ID:</label>
+        <input type="text" id="id" name="personID"/>
+      </div>
+      <div class="button">
+        <button type="submit">Send!</button>
+      </div>
+    </form>
+  </body>
+</html>

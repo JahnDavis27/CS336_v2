@@ -1,0 +1,16 @@
+{
+  "name": "homework01",
+  "version": "1.0.0",
+  "description": "Server to display various employees and their information.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.14.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Jahn Davis",
+  "license": "ISC"
+}

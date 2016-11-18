@@ -1,0 +1,207 @@
+/*** CSS Tutorial: Color page ***/
+
+/* page font */
+body {
+  font: 16px "Arial", Helvetica, sans-serif;
+  background: url("Blue-rule.png");
+}
+
+
+
+/* paragraphs */
+p {
+  color: #00f;
+}
+#first {
+  font-style: italic;
+  background-image: url('Yellow-pin.png');
+  background-repeat: no-repeat;
+  padding-left: 30px;  /* width of the image plus a little extra padding */
+  display: block;  /* may not need this, but I've found I do */
+}
+
+#second{
+	background-image: url('Yellow-pin.png');
+	background-repeat: no-repeat;
+	padding-left: 30px;  /* width of the image plus a little extra padding */
+	display: block;  /* may not need this, but I've found I do */
+}
+
+/* initial letters */
+strong {
+  background-color: #ddf; 
+  color: #f00;
+  font: 200% serif;
+}
+
+.spinach {
+  color: #0b0;
+  background-color: #ddf;
+}
+
+h3 {border-top: 1px solid gray;}
+
+h3.numbered {counter-reset: mynum;}
+
+body {counter-reset: headnum;}
+
+h3:before {
+  content: "(" counter(headnum, upper-latin) ") ";
+  counter-increment: headnum;
+}
+ 
+p.numbered:before {
+  content: counter(mynum) ": ";
+  counter-increment: mynum;
+  font-weight: bold;
+}
+
+li {
+  list-style: lower-roman;
+  margin-bottom: 8px;
+}
+
+ol{
+  border: 10px solid lightblue;
+  width:  100px;
+}
+
+#fixed-pin  {
+  position:fixed;
+  top: 3px;
+  right: 3px;
+}
+
+#demo-table {
+  font: 100% sans-serif;
+  background-color: #efe;
+  border-collapse: collapse;
+  empty-cells: show;
+  border: 1px solid #7a7;
+}
+
+#demo-table > caption {
+  text-align: left;
+  font-weight: bold;
+  font-size: 200%;
+  border-bottom: .2em solid #4ca;
+  margin-bottom: .5em;
+}
+
+
+/* basic shared rules */
+#demo-table th,
+#demo-table td {
+  text-align: right;
+  padding-right: .5em;
+}
+
+#demo-table th {
+  font-weight: bold;
+  padding-left: .5em;
+}
+
+
+/* header */
+#demo-table > thead > tr:first-child > th {
+  text-align: center;
+  color: blue;
+}
+
+#demo-table > thead > tr + tr > th {
+  font-style: italic;
+  color: gray;
+}
+
+/* fix size of superscript */
+#demo-table sup {
+  font-size: 75%;
+}
+
+/* body */
+#demo-table td {
+  background-color: #cef;
+  padding:.5em .5em .5em 3em;
+}
+
+#demo-table tbody th:after {
+  content: ":";
+}
+
+
+/* footer */
+#demo-table tfoot {
+  font-weight: bold;
+}
+
+#demo-table tfoot th {
+  color: blue;
+}
+
+#demo-table tfoot th:after {
+  content: ":";
+}
+
+#demo-table > tfoot td {
+  background-color: #cee;
+}
+
+#demo-table > tfoot > tr:first-child td {
+  border-top: .2em solid #7a7;
+}
+
+#demo-table tbody td {
+  border:1px solid #7a7;
+}
+
+/*** Print sample ***/
+
+/* defaults  for screen */
+#print-head,
+#print-foot {
+  display: none;
+  }
+
+/* print only */
+@media print {
+
+h1 {
+  page-break-before: always;
+  padding-top: 2em;
+  }
+
+h1:first-child {
+  page-break-before: avoid;
+  counter-reset: page;
+  }
+
+#print-head {
+  display: block;
+  position: fixed;
+  top: 0pt;
+  left:0pt;
+  right: 0pt;
+
+  font-size: 200%;
+  text-align: center;
+  }
+
+#print-foot {
+  display: block;
+  position: fixed;
+  bottom: 0pt;
+  right: 0pt;
+
+  font-size: 200%;
+  }
+
+#print-foot:after {
+  content: counter(page);
+  counter-increment: page;
+  }
+  
+h1:hover {
+  color: blue;
+}
+
+}
