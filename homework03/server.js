@@ -187,10 +187,10 @@ app.put('/person/:loginID/:first', function(req, res){
 });
 
 //DELETE method that removes a person from the database
-app.delete('person/:loginID', function(req, res){
+app.delete('person/:id', function(req, res){
 	var id = Number(req.params.id);
 	var collection = databaseConnection.collection('people');
-	var holder = collection.find({loginID: login});
+	var holder = collection.find({loginID: id});
 	//Checks to ensure loginID is not already taken
 	holder.toArray(function(err, docs) {
 		if (docs.length > 0){
