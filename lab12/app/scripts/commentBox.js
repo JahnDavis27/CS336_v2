@@ -1,8 +1,10 @@
 import React from 'react';
 import $ from 'jquery';
 
+
 import CommentList from './commentList';
 import CommentForm from './commentForm';
+
 
 module.exports = React.createClass({
     getInitialState: function() {
