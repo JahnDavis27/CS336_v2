@@ -18,6 +18,7 @@ var app = express();
 var MongoClient = require('mongodb').MongoClient
 
 var db;
+var APP_PATH = path.join(__dirname, 'dist');
 
 app.set('port', (process.env.PORT || 3000));
 
