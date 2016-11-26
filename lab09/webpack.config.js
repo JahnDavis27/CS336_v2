@@ -16,8 +16,8 @@ module.exports = {
         ]
     },
     plugins: [
-            new HtmlWebpackPlugin({template: __dirname + "/app/index.tmpl.html"}),
-        new webpack.HotModuleReplacementPlugin()
+    new HtmlWebpackPlugin({template: __dirname + "/app/index.tmpl.html"}),
+    new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
         port: 3001,
