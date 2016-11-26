@@ -5,8 +5,9 @@
  *************************************************/
 
  //Set up Express
- const express = require("express");
- const app = express();
+const express = require("express")
+const app = express();
+const http_status = require("http-status-codes");
 
  //Set up body parser for the GET
  const body_parser = require ("body-parser");
@@ -27,8 +28,7 @@
 
  //JSON GET method
  app.get("/hello", function(req, res){
- 	res.send({"message" : "Welcome, " + req.query.name + "!"});
- });
+res.send({"content" : "Did we mention that " + req.query.name + " is free!"}); });
 
  //Listening on PORT and HOST
  app.listen(PORT, HOST, () => {
