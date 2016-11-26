@@ -6,23 +6,14 @@
  *******************************************************/
 
 /******************************MODULE AND LIST SETUP****************************************/
+var fs = require('fs');
+var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
-
-//MongoDB implementation
-var MongoClient = require('mongodb').MongoClient
-var databaseConnection;
-
 var app = express();
-
-
-//Adapted from: https://expressjs.com/en/guide/database-integration.html#mongo
-//Establish a connection with the database, then store the connection in a global variable.
-MongoClient.connect('mongodb://cs336:PASSWORD@ds151127.mlab.com:51127/cs336', function (err, db) {
-  if (err) throw err
-
-	databaseConnection = db;
-});
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var db;
 
 app.use(express.static('public'));
 app.use(bodyParser.json());
@@ -31,181 +22,159 @@ app.use(bodyParser.urlencoded({ extended: true}));
 /****************************************MAIN CODE*******************************************************/
 //Taken from Facebook React tutorial
 app.use(function(req, res, next) {
-    // Set permissive CORS header - this allows this server to be used only as
-    // an API server in conjunction with something like webpack-dev-server.
     res.setHeader('Access-Control-Allow-Origin', '*');
-
-    // Disable caching so we'll always get the latest people.
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
 
 //Gets the list of people
-app.get('/people', function (req,res) {
-	var collection = databaseConnection.collection('people');
-
-	//Grabs all the people in the collection
-	collection.find({}).toArray(function(err, docs) {
-		if (err) throw err;
+app.get('/api/people', function (req,res) {
+	db.collection("people").find({}).toArray(function(err, docs) {
+		assert.equal(err, null);
 		res.json(docs);
 	});
 });
 
-//returns a person and their full record of information, based on loginID
-app.get('/person/:id', function(req, res){
-	var id = Number(req.params.id);
-	var collection = databaseConnection.collection('people');
-	
-	var holder = collection.find({loginID: id});
-
-	holder.toArray(function(err, docs) {
-		if (docs.length == 0){
-			res.sendStatus(404);
-		}
-		else{
-			res.json(docs);
-		}
-	});
+app.post('/api/people', function(req, res) {
+    var newPerson = {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        idnumber: req.body.idnumber,
+        startdate: req.body.startdate,
+    };
+    db.collection("people").insertOne(newPerson, function(err, result) {
+        assert.equal(err, null);
+        res.json(result);
+    });
 });
 
+/*************************GET methods****************************/
+app.get('/people', function(req, res) {
+    console.log('Displaying employees on the web page...')
+    db.collection("people").find({}).toArray(function(err, docs) {
+        assert.equal(err, null);
+        res.json(docs);
+    })
+});
+
+// Write out the full record of the employee with the given ID if /person/:ID URL is found
+app.get('/person/:ID', function(req, res) {
+    var loginID = req.params.ID;
+    db.collection("people").find().toArray(function(err, docs) {
+        for (object of docs) {
+            if (object["idnumber"] == loginID) {
+                res.json(object);
+            }
+        }
+    });
+});
 
 //returns a person's full name based on loginID
-app.get('/person/:id/name', function(req, res){
-	var id = Number(req.params.id);
-	var collection = databaseConnection.collection('people');
-	
-	var holder = collection.find({loginID: id});
-
-	holder.toArray(function(err, docs) {
-		if (docs.length == 0){
-			res.sendStatus(404);
-		}
-		else{
-			res.json(docs[0].firstName + " " + docs[0].lastName);
-		}
-	});
+app.get('/person/:ID/name', function(req, res) {
+    var loginID = req.params.ID;
+    db.collection("people").find().toArray(function(err, docs) {
+        for (object of docs) {
+            if (object["idnumber"] == loginID) {
+                var temp = object["firstname"] + " " + object["lastname"];
+                res.json(temp);
+            }
+        }
+    });
 });
+
 
 //returns a person's tenure based on loginID
 app.get('/person/:id/years', function(req, res){
-	var currentDate = new Date();
-	var startDate, personDate, years;
-	
-	var id = Number(req.params.id);
-  	var collection = databaseConnection.collection('people');
-
-  //Check if the find() call returns nothing.
-  	var holder = collection.find({loginID: id});
-  	holder.toArray(function(err, docs) {
-    	if(docs.length == 0) {
-      		//Person not found!
-      		res.sendStatus(404);
-		}	
-		else{
-		startDate = docs[0].startDate;
-	 	personDate = new Date(startDate);
-		var years = currentDate.getFullYear() - personDate.getFullYear();
-		var month = currentDate.getMonth() - personDate.getMonth();
-		if (month < 0 || month === 0 && currentDate.getDate() < personDate.getDate()){
-			years--;
-		}
-		res.send("Length of employment: " + years.toString());
-		}
-	});
+	var loginID = req.params.id;
+    db.collection("people").find().toArray(function(err, docs) {
+        for (object of docs) {
+            if (object["idnumber"] == loginID) {
+                var years = getYears(object["startdate"]);
+                res.json(years);
+            }
+        }
+    });
 });
 
-//GET method that uses the database in collaboration with the AJAX call for the second webpage
-app.get('/person', function(req, res){
-	var id = Number(req.query.personID);
-	var collection = databaseConnection.collection('people');
-	var holder = collection.find({loginID: id});
+/****************PUT, POST, and DELETE methods**************/
+// Get new Employee information from AJAX form data
+app.post('/people', function(req, res) {
+    // Create a newPerson
+    var newPerson = {
+        firstname: req.body.user_first_name,
+        lastname: req.body.user_last_name,
+        loginID: req.body.user_id_number,
+        startDate: req.body.user_start_Date,
+    };
 
-	holder.toArray(function(err, docs) {
-		if (docs.length == 0){
-			//Send error code 404 NOT FOUND
-			res.sendStatus(404);
-		}
-		else{
-			//Returns person
-			res.json(docs);
-		}
-	});
+    // Add the newPerson to the people collection in the database
+    db.collection("people").insertOne(newPerson, function(err, result) {
+        assert.equal(err, null);
+    });
+    // Create a JSON object for the result data that is sent back
+    result = {"first" : req.body.user_first_name, "last" : req.body.user_last_name};
+    //Return the JSON object result data to web page
+    res.json(JSON.stringify(result));
 });
 
-app.post('/people', function(req, res){
-	//Fetches form data
-	var first = req.body.firstname;
-	var last = req.body.lastname;
-	var login = Number(req.body.loginID);
-	var date = req.body.startDate;
-
-	//If some data is missing...
-	if(first == '' || last == '' || login == '' || date == '') {
-		console.log("You're missing data! We cannot create a person.");
-		//We can't create a new person! Send a conflict status code.
-		res.sendStatus(409);
-		return;
-	}
-
-	var newPerson = { firstname: first, lastname: last, loginID: login, startDate: date}
-
-	var collection = databaseConnection.collection('people');
-
-	var holder = collection.find({loginID: login});
-	//Checks to ensure loginID is not already taken
-	holder.toArray(function(err, docs) {
-		if (docs.length > 0){
-			//User already exists
-			console.log("Someone with that login information already exists.");
-			console.log(docs[0]);
-		}
-		else{
-			collection.insert(newPerson);
-		}
-	});
+app.post('/person/:id', function(req, res) {
+    // Get the ID Number entered by the user using req.body
+    var loginID = req.body.id_number;
+    // Find the person based on the sent ID number
+    db.collection("people").find().toArray(function(err, docs) {
+        for (object of docs) {
+            if (object["idnumber"] == loginID) {
+                result = {"first": object["firstname"], "last": object["lastname"], "ID": object["idnumber"], 
+                                "years": getYears(object["startdate"])};
+                res.json(JSON.stringify(result));
+                return;
+            }
+        }
+    });
 });
 
+//PUT method to update Employee info
+app.put('/person/:ID', function(req, res) {
+    var loginID = req.params.id;
+    db.collection("people").updateOne({idnumber: loginID}, { $set: {firstname: req.body.firstname, lastname: req.body.lastname,
+            idnumber: req.body.idnumber, startDate: req.body.startdate}});
 
-//PUT method that updates the first name of a person
-app.put('/person/:loginID/:first', function(req, res){
-	var id = Number(req.params.id);
-	var newName = req.params.first;
-
-	var collection = databaseConnection.collection('people');
-	var holder = collection.find({loginID: login});
-	//Checks to ensure loginID is not already taken
-	holder.toArray(function(err, docs) {
-		if (docs.length > 0){
-			res.sendStatus(404);
-		}
-		else{
-
-			collection.update({loginID: id}, {$set: {firstname: newName} });
-			res.sendStatus(201);
-		}
-	});
+    res.json('Successfully updated employee with ID: ' + loginID);
 });
 
-//DELETE method that removes a person from the database
-app.delete('person/:id', function(req, res){
-	var id = Number(req.params.id);
-	var collection = databaseConnection.collection('people');
-	var holder = collection.find({loginID: id});
-	//Checks to ensure loginID is not already taken
-	holder.toArray(function(err, docs) {
-		if (docs.length > 0){
-			res.sendStatus(404);
-		}
-		else{
-
-			collection.remove({loginID: id});
-			res.sendStatus(200);
-		}
-	});
+// Delete a particular Person record from the employee_list data
+app.delete('/person/:ID', function(req, res) {
+    var loginID = req.params.id;
+    db.collection("people").deleteOne({idnumber: loginID});
+    res.json('Successfully removed employee with ID ' + loginID);
 });
 
+var getYears = function(startDate) {
+    var today = new Date();
+    var birthDate = new Date(startDate);
+    var age = today.getFullYear() - birthDate.getFullYear();
+    var m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+/********************Error handling***********************/
+app.all('*', function(req, res) {
+    console.log("Incorrect URL or ID not found.")
+    res.sendStatus(404);
+});
+
+/********************Methods for use*******************************/
 app.listen(3000, function () {
   console.log('App listening on port 3000!');
 });
 
+// Connect to the MongoDB with a user and a password
+var PASSWORD = 'bjarne';
+MongoClient.connect('mongodb://cs336:' + PASSWORD + '@ds159507.mlab.com:59507/cs336', function (err, dbConnection) {
+	if (err) { throw err; }
+	db = dbConnection;
+});
 
