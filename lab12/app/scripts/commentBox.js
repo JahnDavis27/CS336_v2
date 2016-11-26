@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 import CommentList from './commentList';
 import CommentForm from './commentForm';
-
+import { API_URL, POLL_INTERVAL } from './global';
 
 module.exports = React.createClass({
     getInitialState: function() {
