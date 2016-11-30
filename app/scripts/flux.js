@@ -20,7 +20,7 @@ let StoreTools = {
         return { id: '',  author: '', text: '' };
     }
 }
-}
+
 
 let ActionTools = {
 	loadingComments: function() {
