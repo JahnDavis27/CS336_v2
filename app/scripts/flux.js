@@ -21,7 +21,6 @@ let StoreTools = {
     }
 }
 
-
 let ActionTools = {
 	loadingComments: function() {
         return {
@@ -46,13 +45,6 @@ let ActionTools = {
             id: id,
             comment: comment
         };
-    }
-    deleteComment: function(id, comment){
-    	return {
-    		type: 'DELETE_COMMENT',
-    		id: id,
-    		comment: comment
-    	};
     }
 }
 
