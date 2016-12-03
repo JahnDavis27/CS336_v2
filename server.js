@@ -100,7 +100,6 @@ var mongoURL = 'mongodb://cs336:' + process.env.MONGO_PASSWORD + '@ds159507.mlab
 
 MongoClient.connect(mongoURL, function (err, dbConnection) {
   if (err) throw err;
-
   db = dbConnection;
 });
 
