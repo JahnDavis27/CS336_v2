@@ -22,7 +22,7 @@ let StoreTools = {
 }
 
 let ActionTools = {
-	loadingComments: function() {
+    loadingComments: function() {
         return {
             type: 'LOADING_COMMENTS'
         };
