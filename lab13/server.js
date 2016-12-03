@@ -16,12 +16,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var MongoClient = require('mongodb').MongoClient
+
 var db;
 var APP_PATH = path.join(__dirname, 'dist');
 
 app.set('port', (process.env.PORT || 3000));
 
-app.use('*', express.static(APP_PATH));
+app.use('/', express.static(APP_PATH));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -99,7 +100,7 @@ var PASSWORD = process.env.MONGO_PASSWORD;
 var mongoURL = 'mongodb://cs336:' + PASSWORD + '@ds159507.mlab.com:59507/cs336';
 
 MongoClient.connect(mongoURL, function (err, dbConnection) {
-  if (err) throw err
+  if (err) throw err;
 
   db = dbConnection;
 });

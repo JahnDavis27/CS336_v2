@@ -47,13 +47,6 @@ let ActionTools = {
             comment: comment
         };
     }
-    deleteComment: function(id, comment){
-    	return {
-    		type: 'DELETE_COMMENT',
-    		id: id,
-    		comment: comment
-    	};
-    }
 }
 
 let Reducers = {
