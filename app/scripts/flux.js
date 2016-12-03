@@ -128,6 +128,9 @@ function commentsApp(state, action) {
         case 'EDIT_COMMENT':
             Reducers.editComment(action);
             return state;
+	case 'DELETE_COMMENT':
+            Reducers.deleteComment(action);
+            return state;
         default:
             return state;
     }
