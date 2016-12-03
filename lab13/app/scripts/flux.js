@@ -20,7 +20,6 @@ let StoreTools = {
         return { id: '',  author: '', text: '' };
     }
 }
-}
 
 let ActionTools = {
 	loadingComments: function() {
@@ -46,6 +45,13 @@ let ActionTools = {
             id: id,
             comment: comment
         };
+    },
+    deleteComment: function(id, comment) {
+    	return {
+    	    type: 'DELETE_COMMENT',
+            id: id,
+     	    comment: comment
+    	};
     }
 }
 
@@ -92,6 +98,20 @@ let Reducers = {
          .fail(function(xhr, status, errorThrown) {
              console.error(API_URL, status, errorThrown.toString());
          }.bind(this));
+    },
+    deleteComment: function(action) {
+    	$.ajax({
+    	    url: API_URL + "/" + action.id,
+    	    dataType: 'json',
+    	    type: 'DELETE',
+    	    data: action.comment
+    	})
+    	.done(function(comments){
+    	    console.log("Hello");
+    	}.bind(this))
+    	.fail(function(xhr, status, errorThrown) {
+    	    console.error(API_URL, status, errorThrown.toString());
+    	}.bind(this));
     }
 }
 
@@ -107,6 +127,9 @@ function commentsApp(state, action) {
             return state;
         case 'EDIT_COMMENT':
             Reducers.editComment(action);
+            return state;
+	case 'DELETE_COMMENT':
+            Reducers.deleteComment(action);
             return state;
         default:
             return state;
