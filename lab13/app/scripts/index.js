@@ -9,6 +9,8 @@ import { StoreTools } from './flux';
 
 import '../css/base.css';
 
+StoreTools.startLoadingComments();
+
 ReactDOM.render((
     <Router history={browserHistory}>
         <Route path="/" component={CommentBox}/>
