@@ -31,6 +31,15 @@ module.exports = React.createClass({
         store.dispatch(ActionTools.editComment(Number(this.props.params.id), updatedComment));
         this.context.router.push('/');
     },
+    handleDelete: function() {
+        var deleteComment = {
+            id: Number(this.props.params.id),
+            author: this.state.author.trim(),
+            text: this.state.text.trim()
+        }
+        store.dispatch(ActionTools.deleteComment(Number(this.props.params.id), deleteComment));
+        this.context.router.push('/');
+    },
     render: function() {
         return (
             <div>
