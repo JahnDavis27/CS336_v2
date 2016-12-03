@@ -96,8 +96,7 @@ app.listen(app.get('port'), function() {
 });
 
 //Establish a connection with the database.
-var PASSWORD = process.env.MONGO_PASSWORD;
-var mongoURL = 'mongodb://cs336:' + PASSWORD + '@ds159507.mlab.com:59507/cs336';
+var mongoURL = 'mongodb://cs336:' + process.env.MONGO_PASSWORD + '@ds159507.mlab.com:59507/cs336';
 
 MongoClient.connect(mongoURL, function (err, dbConnection) {
   if (err) throw err;
