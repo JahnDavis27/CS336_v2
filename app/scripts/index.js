@@ -14,5 +14,5 @@ ReactDOM.render((
         <Route path="/" component={CommentBox}/>
         <Route path="/:id" component={CommentEdit} />
     </Router>
- 	), document.getElementById('content')
+), document.getElementById('content')
 );
