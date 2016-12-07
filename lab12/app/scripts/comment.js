@@ -1,5 +1,6 @@
 import React from 'react';
 import Remarkable from 'remarkable';
+import { Link } from 'react-router';
 
 module.exports = React.createClass({
     rawMarkup: function() {
