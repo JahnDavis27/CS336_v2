@@ -10,18 +10,25 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-//Server for Lab10
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var MongoClient = require('mongodb').MongoClient
+
 var db;
 var APP_PATH = path.join(__dirname, 'dist');
 
+//please replace <Password>
+MongoClient.connect('mongodb://cs336:bjarne@ds159507.mlab.com:59507/cs336', function (err, dbConnection) {
+  if (err) throw err
+  	db = dbConnection;
+});
+
+
 app.set('port', (process.env.PORT || 3000));
 
-app.use('*', express.static(APP_PATH));
+app.use('/', express.static(APP_PATH));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -91,17 +98,6 @@ app.delete('/api/comments/:id', function(req, res) {
 app.use('*', express.static(APP_PATH));
 
 app.listen(app.get('port'), function() {
-  console.log('Server started: http://localhost:' + app.get('port') + '/');
+    console.log('Server started: http://localhost:' + app.get('port') + '/');
 });
-
-//Establish a connection with the database.
-var PASSWORD = process.env.MONGO_PASSWORD;
-var mongoURL = 'mongodb://cs336:' + PASSWORD + '@ds159507.mlab.com:59507/cs336';
-
-MongoClient.connect(mongoURL, function (err, dbConnection) {
-  if (err) throw err
-
-  db = dbConnection;
-});
-
 
